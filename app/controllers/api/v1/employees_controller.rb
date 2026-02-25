@@ -28,16 +28,20 @@ module Api
       end
 
       def salary
-        result = Payroll::SalaryCalculator.new(@employee).call
-
-        render json: {
-          gross: result[:gross].to_s,
-          tds: result[:tds].to_s,
-          net: result[:net].to_s
-        }, status: :ok
+        render json: salary_payload, status: :ok
       end
 
       private
+
+      def salary_payload
+        result = Payroll::SalaryCalculator.new(@employee).call
+
+        {
+          gross: result[:gross].to_s,
+          tds: result[:tds].to_s,
+          net: result[:net].to_s
+        }
+      end
 
       def set_employee
         @employee = Employee.find(params[:id])
