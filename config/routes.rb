@@ -10,9 +10,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :employees do
-        member do
-          get :salary
-        end
+        member { get :salary }
+      end
+
+      namespace :salary_metrics do
+        get :country
+        get :job_title
       end
     end
   end
