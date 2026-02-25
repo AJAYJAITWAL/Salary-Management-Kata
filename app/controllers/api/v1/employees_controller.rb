@@ -1,6 +1,7 @@
 module Api
   module V1
     class EmployeesController < ApplicationController
+      before_action :set_employee, only: %i[show update destroy]
 
       def index
         employees = Employee.all
@@ -8,7 +9,6 @@ module Api
       end
 
       def show
-        @employee = Employee.find(params[:id])
         render json: @employee, status: :ok
       end
 
@@ -18,22 +18,23 @@ module Api
       end
 
       def update
-        @employee = Employee.find(params[:id])
         @employee.update!(employee_params)
         render json: @employee, status: :ok
       end
 
       def destroy
-        @employee = Employee.find(params[:id])
         @employee.destroy!
         head :no_content
       end
 
       private
 
+      def set_employee
+        @employee = Employee.find(params[:id])
+      end
+
       def employee_params
-        params.require(:employee)
-              .permit(:full_name, :job_title, :country, :salary)
+        params.require(:employee).permit(:full_name, :job_title, :country, :salary)
       end
     end
   end
