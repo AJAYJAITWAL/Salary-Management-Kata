@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   # root "posts#index"
   namespace :api do
     namespace :v1 do
-      resources :employees
+      resources :employees do
+        member do
+          get :salary
+        end
+      end
     end
   end
 end

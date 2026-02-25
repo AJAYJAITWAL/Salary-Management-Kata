@@ -1,7 +1,7 @@
 module Api
   module V1
     class EmployeesController < ApplicationController
-      before_action :set_employee, only: %i[show update destroy]
+      before_action :set_employee, only: %i[show update destroy salary]
 
       def index
         employees = Employee.all
@@ -27,10 +27,22 @@ module Api
         head :no_content
       end
 
+      def salary
+        result = Payroll::SalaryCalculator.new(@employee).call
+
+        render json: {
+          gross: result[:gross].to_s,
+          tds: result[:tds].to_s,
+          net: result[:net].to_s
+        }, status: :ok
+      end
+
       private
 
       def set_employee
         @employee = Employee.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: "Employee not found" }, status: :not_found
       end
 
       def employee_params
