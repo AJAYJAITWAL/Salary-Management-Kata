@@ -6,7 +6,7 @@ module Api
 
         return render_not_found unless result
 
-        render json: serialize_country(result), status: :ok
+        render json: SalaryMetricsSerializer.country(result), status: :ok
       end
 
       def job_title
@@ -14,26 +14,10 @@ module Api
 
         return render_not_found unless result
 
-        render json: serialize_job(result), status: :ok
+        render json: SalaryMetricsSerializer.job_title(result), status: :ok
       end
 
       private
-
-      def serialize_country(result)
-        {
-          country: result[:country],
-          minimum: result[:minimum].to_s,
-          maximum: result[:maximum].to_s,
-          average: result[:average].to_s
-        }
-      end
-
-      def serialize_job(result)
-        {
-          job_title: result[:job_title],
-          average: result[:average].to_s
-        }
-      end
 
       def render_not_found
         render json: { error: "No records found" }, status: :not_found
